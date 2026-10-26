@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#142923"><meta name="mobile-web-app-capable" content="yes"><title>Двенадцать дверей</title>
+<style>
+:root{color-scheme:dark;--ink:#f4f1d8;--muted:#c2d1bc;--gold:#f2cf79}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;background:#182e24;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer;min-height:48px;touch-action:manipulation}button:focus-visible,input:focus-visible,canvas:focus-visible{outline:3px solid var(--gold);outline-offset:4px}[hidden]{display:none!important}#stage{position:fixed;inset:0;overflow:hidden;isolation:isolate}#game{display:block;width:100%;height:100%;image-rendering:pixelated;touch-action:none;outline-offset:-4px}#stage:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;box-shadow:inset 0 0 100px #0a211533}.hud{position:absolute;z-index:2;top:max(20px,env(safe-area-inset-top));left:max(24px,env(safe-area-inset-left));right:max(24px,env(safe-area-inset-right));display:flex;align-items:center;justify-content:space-between;gap:16px;pointer-events:none}.brand{background:#142b25f5;border:1px solid #64765b;padding:12px 18px;box-shadow:4px 4px 0 #14271f44}.brand small{display:block;color:var(--gold);font:11px Consolas,monospace;letter-spacing:2px;margin-bottom:6px}.brand strong{font-size:20px;letter-spacing:-.4px}.progress{background:#142b25f5;padding:14px 18px;border:1px solid #64765b;display:flex;align-items:center;gap:16px;box-shadow:4px 4px 0 #14271f44}.meter{display:flex;gap:4px}.meter i{width:9px;height:18px;border:1px solid #7e9270;background:#344f3e}.meter i.on{background:var(--gold);border-color:#fff0bc}.counter{font:16px Consolas,monospace;color:var(--gold);white-space:nowrap}.caption{position:absolute;z-index:2;top:max(112px,calc(env(safe-area-inset-top) + 92px));left:50%;transform:translateX(-50%);padding:8px 16px;background:#173127ed;border:1px solid #839477;color:var(--ink);font:14px Consolas,monospace;white-space:nowrap;pointer-events:none}.joystick{position:absolute;z-index:3;left:max(28px,env(safe-area-inset-left));bottom:max(28px,env(safe-area-inset-bottom));width:148px;height:148px;padding:0;border-radius:50%;border:2px solid #d6e4b39c;background:#1b34266b;box-shadow:inset 0 0 0 12px #b9cba41a,0 4px 16px #0f291630;color:#edf4d6;touch-action:none;user-select:none;-webkit-user-select:none;display:grid;place-items:center}.joystick.held{background:#1a352be6;border-color:#f4db94}.stick-knob{width:64px;height:64px;border:2px solid #fff1ba;background:#edcf86;box-shadow:0 5px 0 #8b8154,0 8px 14px #11271566;border-radius:50%;pointer-events:none;display:grid;place-items:center}.stick-knob:after{content:"";width:16px;height:16px;background:#ac9b64;border:3px solid #c0ae76;border-radius:50%}.dir{position:absolute;font-size:15px;line-height:1;color:#f0f3dc;pointer-events:none}.dir.up{top:10px}.dir.down{bottom:10px}.dir.left{left:10px}.dir.right{right:10px}.interact{position:absolute;z-index:3;bottom:max(30px,env(safe-area-inset-bottom));right:max(28px,env(safe-area-inset-right));padding:16px 26px;background:var(--gold);color:#203022;border:2px solid #fff2c2;box-shadow:4px 5px 0 #263e2c7a;min-height:76px;min-width:170px;text-align:left}.interact small{display:block;font:13px Consolas,monospace;margin-bottom:4px;color:#405039}.interact b{font-size:21px}.interact:active{transform:translateY(3px);box-shadow:none}.overlay{position:fixed;left:0;right:0;top:var(--vv-top,0px);height:var(--vv-height,100dvh);z-index:10;background:#091b15cd;display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto;overscroll-behavior:contain}.card{background:#193127;border:2px solid #d9c785;width:min(100%,420px);padding:28px;box-shadow:6px 6px 0 #081b12;flex-shrink:0}.eyebrow{font:12px Consolas,monospace;color:var(--gold);letter-spacing:2px}h2{font-size:30px;line-height:1.15;margin:10px 0 24px;letter-spacing:-1px}label{display:block;font-size:16px;color:var(--muted);margin-bottom:10px}input{width:100%;min-height:54px;background:#0e231c;border:1px solid #8da481;border-radius:0;padding:12px;color:var(--ink);font-size:18px}input::placeholder{color:#9cb196}.message{font-size:14px;line-height:1.5;color:var(--muted);min-height:42px;margin:12px 0}.message.error{color:#ffbb9d}.actions{display:flex;gap:10px}.primary{border:1px solid #fff0b8;background:var(--gold);color:#1c3021;padding:12px 20px;font-weight:700;flex:1}.secondary{border:1px solid #8da481;background:transparent;color:var(--ink);padding:12px 16px}.win-card{text-align:center}.win-card h2{font:700 clamp(36px,10vw,56px) Consolas,monospace;color:var(--gold);margin:16px 0}.win-card p{color:var(--muted);line-height:1.5;margin:0 0 24px}.trophy{display:block;width:80px;height:100px;margin:0 auto 16px;image-rendering:pixelated}.win-card .actions{justify-content:center}
+@media(max-width:650px){.hud{top:max(16px,env(safe-area-inset-top));left:max(16px,env(safe-area-inset-left));right:max(16px,env(safe-area-inset-right));gap:8px}.brand{padding:10px 12px}.brand small{font-size:9px;letter-spacing:1px}.brand strong{font-size:16px}.progress{padding:12px;gap:8px}.meter{display:none}.counter{font-size:16px}.caption{top:max(98px,calc(env(safe-area-inset-top) + 82px));font-size:14px}.joystick{width:140px;height:140px;left:max(20px,env(safe-area-inset-left));bottom:max(24px,env(safe-area-inset-bottom))}.stick-knob{width:60px;height:60px}.interact{right:max(20px,env(safe-area-inset-right));bottom:max(28px,env(safe-area-inset-bottom));padding:14px 18px;min-width:152px}.interact b{font-size:19px}.card{padding:24px}.overlay{padding:20px}}
+@media(max-height:500px){.hud{top:max(10px,env(safe-area-inset-top));left:max(16px,env(safe-area-inset-left));right:max(16px,env(safe-area-inset-right))}.brand{padding:8px 12px}.brand small{display:none}.brand strong{font-size:16px}.progress{padding:10px 12px}.caption{top:65px}.joystick{width:120px;height:120px;bottom:max(16px,env(safe-area-inset-bottom));left:max(20px,env(safe-area-inset-left))}.stick-knob{width:52px;height:52px}.interact{bottom:max(20px,env(safe-area-inset-bottom));min-height:64px;padding:10px 18px}.overlay{align-items:flex-start;padding:16px}.card{padding:20px;margin:auto}.card h2{font-size:24px;margin:8px 0 16px}.card .message{min-height:21px;margin:10px 0}.trophy{width:48px;height:60px;margin-bottom:8px}.win-card h2{font-size:40px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style></head><body>
+<main id="stage" aria-label="Двенадцать дверей — пиксельная игра">
+<canvas id="game" tabindex="0" aria-label="Коридор с 12 кабинетами. Двигайтесь стрелками или WASD, на телефоне используйте джойстик. Рядом с дверью нажмите Ответить."></canvas>
+<header class="hud"><div class="brand"><small>ПИКСЕЛЬНЫЙ КВЕСТ</small><strong>Двенадцать дверей</strong></div><div class="progress"><div class="meter" id="meter" aria-hidden="true"></div><span class="counter" id="counter" aria-label="Пройдено кабинетов">00 / 12</span></div></header>
+<div class="caption" id="caption" role="status" aria-live="polite" hidden></div>
+<button class="joystick" id="joystick" aria-label="Джойстик: удерживайте и тяните в сторону движения" type="button"><span class="dir up" aria-hidden="true">▲</span><span class="dir down" aria-hidden="true">▼</span><span class="dir left" aria-hidden="true">◀</span><span class="dir right" aria-hidden="true">▶</span><span class="stick-knob" id="stick-knob" aria-hidden="true"></span></button>
+<button class="interact" id="interact" type="button" hidden><small id="room-number">Кабинет</small><b>Ответить ↗</b></button>
+</main>
+<div class="overlay" id="answer-dialog" role="dialog" aria-modal="true" aria-labelledby="room-title" hidden><section class="card"><div class="eyebrow">ДВЕРЬ РЯДОМ</div><h2 id="room-title">Название кабинета</h2><form id="answer-form" autocomplete="off"><label for="answer">Как называется этот кабинет?</label><input id="answer" type="text" placeholder="Название кабинета" maxlength="120" spellcheck="false" enterkeyhint="done" aria-describedby="feedback"><p class="message" id="feedback" role="status" aria-live="polite">Регистр не важен. Ё и Е равнозначны.</p><div class="actions"><button type="submit" class="primary">Проверить</button><button type="button" class="secondary" id="cancel-answer">Назад</button></div></form></section></div>
+<div class="overlay" id="win" role="dialog" aria-modal="true" aria-labelledby="win-title" hidden><section class="card win-card"><canvas class="trophy" id="trophy" width="40" height="50" aria-hidden="true"></canvas><div class="eyebrow">12 ИЗ 12 · МАРШРУТ ПРОЙДЕН</div><h2 id="win-title">Молодец</h2><p>Все ответы верны.<br>Все кабинеты найдены!</p><div class="actions"><button class="primary" id="close-win">В коридор</button><button class="secondary" id="restart-win">Ещё раз</button></div></section></div>
+<script>
+'use strict';
+/* ==================== НАСТРОЙКИ ИГРЫ ====================
+   number — номер на двери; answers — допустимые варианты названия.
+   Оставьте ровно 12 кабинетов. После изменения ответов обновите storageKey.
+   В статической игре ответы доступны в исходном коде — это не экзамен с защитой.
+*/
+const CONFIG = {
+  "storageKey": "twelve-doors-campus-v1",
+  "rooms": [
+    {
+      "number": "102",
+      "answers": [
+        "кафедра математического анализа и теории функции"
+      ]
+    },
+    {
+      "number": "106",
+      "answers": [
+        "лаборатория оптики"
+      ]
+    },
+    {
+      "number": "210",
+      "answers": [
+        "дирекция ицт"
+      ]
+    },
+    {
+      "number": "203",
+      "answers": [
+        "деканат"
+      ]
+    },
+    {
+      "number": "224",
+      "answers": [
+        "кафедра прикладной математики и информатики"
+      ]
+    },
+    {
+      "number": "219",
+      "answers": [
+        "кабинет общей энергетики"
+      ]
+    },
+    {
+      "number": "319",
+      "answers": [
+        "лаборатория электроснабжения и умных технологий"
+      ]
+    },
+    {
+      "number": "323",
+      "answers": [
+        "кафедра электроснабжения и технической диагностики"
+      ]
+    },
+    {
+      "number": "306",
+      "answers": [
+        "студия самозаписи"
+      ]
+    },
+    {
+      "number": "406",
+      "answers": [
+        "кафедра физики и материаловедения"
+      ]
+    },
+    {
+      "number": "403",
+      "answers": [
+        "лаборатория электродинамики и распространения радиоволн"
+      ]
+    },
+    {
+      "number": "401",
+      "answers": [
+        "учебная аудитория имени Сергея Федотовича Боева"
+      ]
+    }
+  ]
+};
+const $=id=>document.getElementById(id);
+if(CONFIG.rooms.length!==12) throw new Error('В CONFIG должно быть ровно 12 кабинетов.');
+const rooms=CONFIG.rooms.map((r,i)=>({...r,x:200+i*220}));
+const worldWidth=rooms[11].x+230;
+function shuffleRooms(previous=[]){
+  // Fisher–Yates: перемешиваются целые записи, номер всегда связан с ответом.
+  for(let i=rooms.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[rooms[i],rooms[j]]=[rooms[j],rooms[i]];}
+  if(previous.length===rooms.length&&rooms.every((r,i)=>r.number===previous[i]))[rooms[0],rooms[1]]=[rooms[1],rooms[0]];
+  rooms.forEach((r,i)=>{r.x=200+i*220;});
+}
+const canvas=$('game'), ctx=canvas.getContext('2d');
+let W=900,H=450,camera=0,active=-1,lastTime=0,won=false,restoreFocus=null,sceneY=0;
+let joystickPointer=null;const stick={x:0,y:0};
+const keys=new Set(), touchKeys=new Set();
+const player={x:90,y:224,walk:0,moving:false,face:1};
+let solved=new Set();
+function normalize(s){return s.normalize('NFKC').toLocaleLowerCase('ru-RU').replace(/ё/g,'е').trim().replace(/\s+/g,' ');}
+function load(){let raw=null;try{raw=JSON.parse(localStorage.getItem(CONFIG.storageKey)||'null');}catch(e){$('counter').title='Сохранение в браузере недоступно';}
+shuffleRooms(Array.isArray(raw?.order)?raw.order:[]);
+if(Array.isArray(raw?.solvedNumbers)){const numbers=new Set(raw.solvedNumbers.filter(n=>typeof n==='string'));solved=new Set(rooms.flatMap((r,i)=>numbers.has(r.number)?[i]:[]));}}
+function save(){try{localStorage.setItem(CONFIG.storageKey,JSON.stringify({solvedNumbers:[...solved].map(i=>rooms[i].number),order:rooms.map(r=>r.number)}));}catch(e){$('counter').title='Сохранение в браузере недоступно';}}
+function progress(){const n=solved.size;$('counter').textContent=String(n).padStart(2,'0')+' / 12';$('meter').replaceChildren(...rooms.map((_,i)=>{const el=document.createElement('i');if(solved.has(i))el.className='on';return el;}));}
+function resize(){const box=canvas.getBoundingClientRect();const zoom=box.height<500?1.25:(box.width<650?1.5:2);W=Math.ceil(box.width/zoom);H=Math.ceil(box.height/zoom);canvas.width=W;canvas.height=H;sceneY=Math.round(Math.max(48,H*.48-150));ctx.imageSmoothingEnabled=false;}
+new ResizeObserver(resize).observe(canvas);
+function roomUI(i){if(i===active)return;active=i;$('answer').value='';$('answer').removeAttribute('aria-invalid');$('feedback').className='message';$('feedback').textContent='Регистр не важен. Ё и Е равнозначны.';const found=i>=0,done=found&&solved.has(i);$('room-title').textContent=found?'Кабинет '+rooms[i].number:'Название кабинета';$('room-number').textContent=found?'Кабинет '+rooms[i].number:'';$('interact').hidden=!found||done;$('caption').textContent=found?(done?'✓ Кабинет '+rooms[i].number+' пройден':'Кабинет '+rooms[i].number):'Найди следующую дверь';$('caption').hidden=!found;}
+function clearStick(){joystickPointer=null;stick.x=0;stick.y=0;$('stick-knob').style.transform='translate(0px,0px)';$('joystick').classList.remove('held');}
+function openAnswer(){if(active<0||solved.has(active))return;keys.clear();clearStick();$('answer-dialog').hidden=false;$('stage').inert=true;$('feedback').textContent='Регистр не важен. Ё и Е равнозначны.';$('feedback').className='message';$('answer').focus({preventScroll:true});}
+function closeAnswer(){keys.clear();$('answer-dialog').hidden=true;$('stage').inert=false;$('answer').blur();canvas.focus({preventScroll:true});}
+$('interact').onclick=openAnswer;$('cancel-answer').onclick=closeAnswer;
+function showWin(){won=true;closeAnswer();keys.clear();touchKeys.clear();clearStick();restoreFocus=document.activeElement;$('win').hidden=false;$('stage').inert=true;$('close-win').focus();}
+function closeWin(){$('win').hidden=true;$('stage').inert=false;canvas.focus({preventScroll:true});}
+function resetGame(){const previous=rooms.map(r=>r.number);solved.clear();shuffleRooms(previous);player.x=90;player.y=224;won=false;active=-2;keys.clear();touchKeys.clear();$('win').hidden=true;closeAnswer();clearStick();progress();roomUI(-1);save();canvas.focus({preventScroll:true});}
+$('answer-form').addEventListener('submit',e=>{e.preventDefault();if(active<0||solved.has(active))return;const input=$('answer');if(!normalize(input.value)){$('feedback').textContent='Сначала введи название кабинета.';$('feedback').className='message error';input.setAttribute('aria-invalid','true');return;}if(rooms[active].answers.some(a=>normalize(a)===normalize(input.value))){solved.add(active);input.removeAttribute('aria-invalid');save();progress();const i=active;active=-2;roomUI(i);closeAnswer();if(solved.size===12)showWin();}else{$('feedback').textContent='Пока не совпало. Попробуй другое название.';$('feedback').className='message error';input.setAttribute('aria-invalid','true');input.select();}});
+$('answer').addEventListener('input',()=>{$('answer').removeAttribute('aria-invalid');});
+
+$('close-win').onclick=closeWin;$('restart-win').onclick=resetGame;
+const keyMap={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',KeyA:'left',KeyD:'right',KeyW:'up',KeyS:'down'};
+function trapTab(e,first,last){if(e.key!=='Tab')return;if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
+document.addEventListener('keydown',e=>{if(!$('win').hidden){if(e.key==='Escape'){e.preventDefault();closeWin();}trapTab(e,$('close-win'),$('restart-win'));return;}if(!$('answer-dialog').hidden){if(e.key==='Escape'){e.preventDefault();closeAnswer();}trapTab(e,$('answer'),$('cancel-answer'));return;}if(e.code==='Enter'||e.code==='Space'){if(active>=0&&!solved.has(active)){e.preventDefault();openAnswer();}return;}if(keyMap[e.code]){e.preventDefault();keys.add(keyMap[e.code]);}});
+document.addEventListener('keyup',e=>{if(keyMap[e.code])keys.delete(keyMap[e.code]);});
+function stopInput(){keys.clear();touchKeys.clear();clearStick();}
+window.addEventListener('blur',()=>{stopInput();save();});
+document.addEventListener('visibilitychange',()=>{stopInput();if(document.hidden)save();});
+window.addEventListener('pagehide',save);
+const joystick=$('joystick');
+function updateStick(e){const b=joystick.getBoundingClientRect(),radius=b.width*.29;let dx=e.clientX-(b.left+b.width/2),dy=e.clientY-(b.top+b.height/2);const len=Math.hypot(dx,dy);if(len>radius){dx=dx/len*radius;dy=dy/len*radius;}const magnitude=Math.min(len/radius,1),deadzone=.12;const amount=magnitude<deadzone?0:(magnitude-deadzone)/(1-deadzone);const vectorLen=Math.hypot(dx,dy)||1;stick.x=dx/vectorLen*amount;stick.y=dy/vectorLen*amount;$('stick-knob').style.transform=`translate(${dx}px,${dy}px)`;}
+joystick.addEventListener('pointerdown',e=>{if(joystickPointer!==null||!$('answer-dialog').hidden||!$('win').hidden)return;e.preventDefault();joystickPointer=e.pointerId;keys.clear();joystick.setPointerCapture(e.pointerId);joystick.classList.add('held');updateStick(e);});
+joystick.addEventListener('pointermove',e=>{if(e.pointerId!==joystickPointer)return;e.preventDefault();updateStick(e);});
+for(const type of ['pointerup','pointercancel','lostpointercapture'])joystick.addEventListener(type,e=>{if(e.pointerId===joystickPointer)clearStick();});
+// Tapping elsewhere cannot interrupt a captured joystick or make it stick.
+function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),w,h);}
+function text(s,x,y,size=12,c='#f1eed1',align='left'){ctx.fillStyle=c;ctx.textAlign=align;ctx.font=`bold ${size}px Consolas, monospace`;ctx.fillText(s,Math.round(x),Math.round(y));}
+function plant(x,y){rect(x+8,y,4,26,'#345b37');rect(x-3,y+5,12,7,'#497b44');rect(x+11,y-3,12,8,'#619450');rect(x,y-8,9,12,'#76a45d');rect(x+3,y+20,18,17,'#9d6850');rect(x,y+18,24,5,'#c58b5e');rect(x+6,y+25,3,9,'#bb815b');}
+function drawDoor(r,i){const x=Math.round(r.x-camera),done=solved.has(i),near=active===i;if(x<-160||x>W+160)return;
+// Wall light, lintel and number plate.
+rect(x-42,48,84,6,'#526a57');rect(x-38,54,76,100,'#34483d');rect(x-32,58,64,94,done?'#5a775a':'#846a4d');rect(x-27,62,54,89,done?'#779473':'#a28a64');rect(x-22,66,44,38,done?'#253f37':'#344c48');rect(x-18,70,36,29,done?'#608b7b':'#688477');rect(x-18,70,8,29,done?'#83ad8d':'#9bb1a0');rect(x-25,111,50,3,done?'#476548':'#796144');rect(x-23,118,46,25,done?'#66865f':'#917750');rect(x+17,110,5,4,'#f3d886');rect(x+19,110,2,8,'#b68d4d');rect(x-39,151,78,5,'#b9b99a');rect(x-44,156,88,4,'#415844');rect(x-26,24,52,22,'#142f2c');rect(x-24,26,48,18,done?'#335b42':'#243d36');text(r.number,x,40,14,'#f1e4b3','center');
+if(done){rect(x+47,72,20,20,'#294e35');text('✓',x+57,87,15,'#d3ecc2','center');}else{rect(x+48,77,16,9,'#c6c4a0');rect(x+51,80,10,2,'#858c70');}
+if(near){rect(x-46,160,92,3,done?'#b3d7a0':'#f2cf79');text(done?'ПРОЙДЕН':'ТЫ ЗДЕСЬ',x,178,10,done?'#d8edc6':'#f9e1a1','center');}
+}
+function drawPlayer(){const x=Math.round(player.x-camera),y=Math.round(player.y);const step=player.moving?Math.sin(player.walk)*3:0;rect(x-12,y+6,26,6,'#435b4990');rect(x-7,y-4,6,12+Math.round(step),'#273f43');rect(x+3,y-4,6,12-Math.round(step),'#273f43');rect(x-9,y+5+Math.round(step),8,4,'#192e31');rect(x+3,y+5-Math.round(step),8,4,'#192e31');rect(x-10,y-25,22,23,'#d8ac60');rect(x-13,y-22,5,15,'#e2bd77');rect(x+12,y-22,5,15,'#e2bd77');rect(x-13,y-8,5,5,'#e6be94');rect(x+12,y-8,5,5,'#e6be94');rect(x-9,y-21,15,16,'#c08a48');rect(x-7,y-19,11,12,'#deae68');rect(x+5,y-21,3,15,'#f2d38b');rect(x-6,y-31,13,8,'#c98f68');rect(x-10,y-45,22,18,'#e7bd8b');rect(x-11,y-46,24,8,'#443d30');rect(x-11,y-40,6,8,'#443d30');rect(x+8,y-40,5,7,'#443d30');rect(x-7,y-47,17,3,'#64503a');rect(x+(player.face<0?-6:5),y-35,3,3,'#25332d');}
+function draw(){ctx.clearRect(0,0,W,H);rect(0,0,W,H,'#9daa88');ctx.save();ctx.translate(0,sceneY);camera=Math.max(0,Math.min(worldWidth-W,player.x-W*.38));if(worldWidth<W)camera=0;
+// Repeating architectural tiles, pixel-native scenery.
+rect(0,0,W,H,'#75896b');rect(0,0,W,17,'#314e40');rect(0,17,W,5,'#a0af88');rect(0,22,W,130,'#9daa88');rect(0,107,W,45,'#809476');rect(0,148,W,8,'#4b6650');rect(0,156,W,H-156,'#778b6d');
+const offset=-((Math.floor(camera)%44)+44)%44;for(let y=162;y<H;y+=28){rect(0,y,W,1,'#657d60');for(let x=offset+((y-162)/28%2)*22;x<W;x+=44)rect(x,y,1,28,'#6a8264');}
+for(let i=0;i<13;i++){const x=90+i*220-camera;if(x<-160||x>W+160)continue;rect(x,26,3,118,'#8e9f7b');rect(x-16,35,32,6,'#d8d5ac');rect(x-12,41,24,3,'#e9e4b8');rect(x-9,44,18,3,'#acb48c');if(i%3===1){rect(x-17,78,36,44,'#4d6a58');rect(x-14,81,30,38,'#cfceaa');rect(x-10,88,23,4,'#8d9c7a');rect(x-10,97,18,3,'#a4ac87');rect(x-10,104,21,3,'#a4ac87');}if(i%3===0)plant(x-8,126);}
+rooms.forEach(drawDoor);for(let i=0;i<4;i++){const x=310+i*660-camera;if(x>-120&&x<W+120){rect(x-39,128,82,6,'#5a6a47');rect(x-35,135,6,13,'#425741');rect(x+30,135,6,13,'#425741');rect(x-39,118,82,7,'#b89e64');rect(x-37,127,78,4,'#d0b47a');}}
+drawPlayer();
+// Small directional route cues on the floor.
+const tx=player.x-camera;if(player.x<worldWidth-210){text('›  ›  ›',Math.min(W-50,tx+80),252,18,'#b5bf96','center');}
+ctx.restore();
+}
+function tick(t){const dt=Math.min((t-lastTime)/1000||0,.04);lastTime=t;let dx=0,dy=0;if($('win').hidden&&$('answer-dialog').hidden){const has=k=>keys.has(k);dx=+has('right')-+has('left')+stick.x;dy=+has('down')-+has('up')+stick.y;}const len=Math.hypot(dx,dy),speed=Math.min(len,1);player.moving=speed>.01;if(player.moving){player.x=Math.max(30,Math.min(worldWidth-30,player.x+dx/len*180*speed*dt));player.y=Math.max(180,Math.min(286,player.y+dy/len*180*speed*dt));player.walk+=dt*13*speed;if(Math.abs(dx)>.01)player.face=dx>0?1:-1;}const near=rooms.findIndex(r=>Math.abs(player.x-r.x)<78&&player.y<250);roomUI(near);draw();requestAnimationFrame(tick);}
+// Пиксельный кубок за прохождение; без внешних изображений.
+const pc=$('trophy').getContext('2d');const pr=(x,y,w,h,c)=>{pc.fillStyle=c;pc.fillRect(x,y,w,h);};
+pr(9,7,22,4,'#fff0ae');pr(11,11,18,17,'#e9bd58');pr(14,28,12,4,'#d7a44e');pr(18,32,4,8,'#e9bd58');pr(12,40,16,4,'#d7a44e');pr(8,44,24,4,'#f2cf79');pr(3,10,6,4,'#f2cf79');pr(3,14,4,9,'#d7a44e');pr(6,23,7,4,'#e9bd58');pr(31,10,6,4,'#f2cf79');pr(33,14,4,9,'#d7a44e');pr(27,23,7,4,'#e9bd58');pr(14,13,3,11,'#fff0ae');pr(21,13,4,3,'#f7d77c');pr(20,19,5,3,'#bd8e42');
+function syncVisibleViewport(){const v=window.visualViewport;document.documentElement.style.setProperty('--vv-height',(v?v.height:innerHeight)+'px');document.documentElement.style.setProperty('--vv-top',(v?v.offsetTop:0)+'px');}
+if(window.visualViewport){visualViewport.addEventListener('resize',syncVisibleViewport);visualViewport.addEventListener('scroll',syncVisibleViewport);}
+window.addEventListener('resize',syncVisibleViewport);syncVisibleViewport();
+load();save();progress();resize();requestAnimationFrame(tick);if(solved.size===12)showWin();
+</script></body></html>
